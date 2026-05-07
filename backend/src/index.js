@@ -21,13 +21,9 @@ const app = express();
 app.use(helmet());
 
 app.use(cors({
-  origin: [
-    'http://localhost:3000',
-    'https://fintrackpro-demo.vercel.app',
-    'https://fintrackpro-demo-a5yinqtas-santoshnani26s-projects.vercel.app'
-  ],
+  origin: true,
   credentials: true,
-}));
+}))
 
 app.use(morgan('dev'));
 app.use(express.json({ limit: '10mb' }));
