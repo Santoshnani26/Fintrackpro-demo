@@ -1,0 +1,150 @@
+### FinTrack Pro API Tests
+### Install VS Code extension: humao.rest-client
+### Then click "Send Request" above each request
+
+@baseUrl = http://localhost:5000/api
+@token = PASTE_YOUR_TOKEN_HERE
+
+### ─── AUTH ─────────────────────────────────────────────────
+
+### Signup
+POST {{baseUrl}}/auth/signup
+Content-Type: application/json
+
+{
+  "name": "Test User",
+  "email": "test@example.com",
+  "password": "password123"
+}
+
+###
+
+### Login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "demo@fintrack.com",
+  "password": "demo1234"
+}
+
+###
+
+### ─── EXPENSES ───────────────────────────────────────────────
+
+### Get all expenses
+GET {{baseUrl}}/expenses
+Authorization: Bearer {{token}}
+
+###
+
+### Get expenses with filters
+GET {{baseUrl}}/expenses?category=Food&page=1&limit=10
+Authorization: Bearer {{token}}
+
+###
+
+### Get expenses with search
+GET {{baseUrl}}/expenses?search=pizza
+Authorization: Bearer {{token}}
+
+###
+
+### Create expense
+POST {{baseUrl}}/expenses
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "Dinner at Pizza Hut",
+  "amount": 850,
+  "category": "Food",
+  "date": "2024-05-01",
+  "notes": "With friends"
+}
+
+###
+
+### ─── SUMMARY ─────────────────────────────────────────────
+
+### Get dashboard summary
+GET {{baseUrl}}/summary
+Authorization: Bearer {{token}}
+
+###
+
+### ─── ANALYTICS ───────────────────────────────────────────
+
+### Get analytics data
+GET {{baseUrl}}/analytics
+Authorization: Bearer {{token}}
+
+###
+
+### ─── AI AGENTS ───────────────────────────────────────────
+
+### Get AI insights
+GET {{baseUrl}}/ai/insights
+Authorization: Bearer {{token}}
+
+###
+
+### Get AI expense prediction
+GET {{baseUrl}}/ai/predict
+Authorization: Bearer {{token}}
+
+###
+
+### ─── EXPORT ──────────────────────────────────────────────
+
+### Export PDF
+GET {{baseUrl}}/export/pdf
+Authorization: Bearer {{token}}
+
+###
+
+### Export Excel
+GET {{baseUrl}}/export/excel
+Authorization: Bearer {{token}}
+
+###
+
+### ─── SETTINGS ────────────────────────────────────────────
+
+### Get settings
+GET {{baseUrl}}/settings
+Authorization: Bearer {{token}}
+
+###
+
+### Save settings
+POST {{baseUrl}}/settings
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "monthlyBudget": 50000,
+  "categoryBudgets": {
+    "Food": 15000,
+    "Travel": 10000,
+    "Shopping": 8000
+  },
+  "alerts": {
+    "enabled": true,
+    "threshold": 80
+  }
+}
+
+###
+
+### ─── HEALTH ──────────────────────────────────────────────
+
+### Check backend health
+GET {{baseUrl}}/health
+
+###
+
+### Check AI service health
+GET http://localhost:8000/health
+
+###

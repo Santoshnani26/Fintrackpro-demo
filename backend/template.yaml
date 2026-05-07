@@ -1,0 +1,25 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Resources:
+  FintrackAPI:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./
+      Handler: lambda.handler
+      Runtime: nodejs18.x
+      MemorySize: 512
+      Timeout: 30
+
+      Events:
+        ProxyApi:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: ANY
+
+        RootApi:
+          Type: Api
+          Properties:
+            Path: /
+            Method: ANY
