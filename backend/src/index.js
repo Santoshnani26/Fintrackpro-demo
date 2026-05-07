@@ -21,7 +21,11 @@ const PORT = process.env.PORT || 5000
 // Security middleware
 app.use(helmet())
 app.use(cors({
-  origin: true,
+  origin: [
+    'http://localhost:3000',
+    'https://fintrackpro-demo.vercel.app',
+    'https://fintrackpro-demo-a5yinqtas-santoshnani26s-projects.vercel.app'
+  ],
   credentials: true,
 }))
 app.use(morgan('dev'))
