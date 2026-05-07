@@ -33,6 +33,9 @@ const authLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 20 })
 app.use('/api', limiter)
 app.use('/api/auth', authLimiter)
 
+app.get('/', (req, res) => {
+  res.send('Backend Running')
+})
 // Routes
 app.use('/api/auth', authRoutes)
 app.use('/api/expenses', expenseRoutes)
@@ -77,8 +80,8 @@ app.use(async (req, res, next) => {
 // Start local server
 connectDB()
   .then(() => {
-    app.listen(PORT, () => {
-      console.log(`🚀 Backend running on http://localhost:${PORT}`);
+    app.listen(process.env.PORT || 5000, '0.0.0.0', () => {
+  console.log(`🚀 Server running on port ${process.env.PORT || 5000}`);
     });
   })
   .catch((err) => {
