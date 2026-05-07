@@ -41,6 +41,20 @@ app.get('/', (req, res) => {
   res.send('Backend Running')
 })
 
+let isConnected = false;
+
+const connectDB = async () => {
+  if (isConnected) return;
+
+  try {
+    await mongoose.connect(process.env.MONGO_URI);
+    isConnected = true;
+    console.log("✅ MongoDB connected");
+  } catch (err) {
+    console.error("❌ MongoDB connection failed:", err.message);
+    throw err;
+  }
+};
 // Run DB connection before handling requests
 app.use(async (req, res, next) => {
   try {
@@ -61,25 +75,6 @@ app.use('/api/settings', settingsRoutes)
 app.use('/api/ai', aiRoutes)
 
 app.get('/api/health', (req, res) => res.json({ status: 'ok' }))
-
-// Connect MongoDB and start
-// Connect MongoDB
-let isConnected = false;
-
-const connectDB = async () => {
-  if (isConnected) return;
-
-  try {
-    await mongoose.connect(process.env.MONGO_URI);
-    isConnected = true;
-    console.log("✅ MongoDB connected");
-  } catch (err) {
-    console.error("❌ MongoDB connection failed:", err.message);
-    throw err;
-  }
-};
-
-
 
 // Error handler
 
