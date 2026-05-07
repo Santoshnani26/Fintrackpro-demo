@@ -36,6 +36,17 @@ app.use('/api/auth', authLimiter)
 app.get('/', (req, res) => {
   res.send('Backend Running')
 })
+
+// Run DB connection before handling requests
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    next(err);
+  }
+});
+
 // Routes
 app.use('/api/auth', authRoutes)
 app.use('/api/expenses', expenseRoutes)
@@ -64,15 +75,7 @@ const connectDB = async () => {
   }
 };
 
-// Run DB connection before handling requests
-app.use(async (req, res, next) => {
-  try {
-    await connectDB();
-    next();
-  } catch (err) {
-    next(err);
-  }
-});
+
 
 // Error handler
 
