@@ -1,6 +1,20 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 
+Parameters:
+  MongoUri:
+    Type: String
+    NoEcho: true
+    Description: MongoDB Atlas connection URI.
+  JwtSecret:
+    Type: String
+    NoEcho: true
+    Description: JWT secret used by the backend service.
+  AiServiceUrl:
+    Type: String
+    Default: https://example-ai.execute-api.ap-south-1.amazonaws.com/prod
+    Description: Base URL of the deployed AI service.
+
 Resources:
   FintrackAPI:
     Type: AWS::Serverless::Function
@@ -11,15 +25,39 @@ Resources:
       MemorySize: 512
       Timeout: 30
 
+      Environment:
+        Variables:
+          MONGO_URI: !Ref MongoUri
+          JWT_SECRET: !Ref JwtSecret
+          AI_SERVICE_URL: !Ref AiServiceUrl
+
       Events:
         ProxyApi:
           Type: Api
           Properties:
             Path: /{proxy+}
             Method: ANY
+            RestApiId:
+              Ref: ServerlessRestApi
 
         RootApi:
           Type: Api
           Properties:
             Path: /
             Method: ANY
+            RestApiId:
+              Ref: ServerlessRestApi
+
+  ServerlessRestApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      Cors:
+        AllowMethods: "'*'"
+        AllowHeaders: "'*'"
+        AllowOrigin: "'*'"
+
+Outputs:
+  BackendApiUrl:
+    Description: Invoke URL for backend REST API.
+    Value: !Sub https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod

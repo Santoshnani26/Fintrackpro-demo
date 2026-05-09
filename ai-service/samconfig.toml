@@ -1,13 +1,13 @@
 version = 0.1
 
 [default.deploy.parameters]
-stack_name = "fintrack-backend"
+stack_name = "fintrack-ai"
 resolve_s3 = true
-s3_prefix = "fintrack-backend"
+s3_prefix = "fintrack-ai"
+region = "ap-south-1"
 confirm_changeset = true
 capabilities = "CAPABILITY_IAM"
 image_repositories = []
-parameter_overrides = "AiServiceUrl=\"https://fwsgubzb73.execute-api.ap-south-1.amazonaws.com/prod\""
 
 [default.global.parameters]
 region = "ap-south-1"

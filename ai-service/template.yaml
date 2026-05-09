@@ -1,0 +1,53 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Parameters:
+  OpenAiApiKey:
+    Type: String
+    NoEcho: true
+    Description: OpenAI API key for agent execution.
+
+Resources:
+  FintrackAiApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      StageName: prod
+      CorsConfiguration:
+        AllowOrigins:
+          - "*"
+        AllowHeaders:
+          - "*"
+        AllowMethods:
+          - GET
+          - POST
+          - OPTIONS
+
+  FintrackAiFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./
+      Handler: lambda.handler
+      Runtime: python3.11
+      MemorySize: 1024
+      Timeout: 30
+      Environment:
+        Variables:
+          OPENAI_API_KEY: !Ref OpenAiApiKey
+      Events:
+        Root:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref FintrackAiApi
+            Path: /
+            Method: ANY
+        Proxy:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref FintrackAiApi
+            Path: /{proxy+}
+            Method: ANY
+
+Outputs:
+  AiServiceUrl:
+    Description: Invoke URL for FastAPI AI service.
+    Value: !Sub https://${FintrackAiApi}.execute-api.${AWS::Region}.amazonaws.com/prod
